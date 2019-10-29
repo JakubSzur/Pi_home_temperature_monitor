@@ -1,0 +1,7 @@
+2019-10-29 22:36:27: -- Analysis Started by On File Change, After Delay
+2019-10-29 22:36:27: L: State File has changed, so re-read it: C:/Users/Kuba/Desktop/python/Pi_home_temperature_monitor/_gsdata_/_file_state_v4._gs
+2019-10-29 22:36:27: L: State file does not exist: C:/Users/Kuba/Desktop/python/Pi_home_temperature_monitor/_gsdata_/_file_state_v4._gs
+2019-10-29 22:36:27: Changes: 0, Conflicts: 0, CopyTime: 0, FixState: 207, Errors: 0, All: 302
+2019-10-29 22:36:27: == Sync Started by On File Change, After Delay
+2019-10-29 22:36:27: == Sync Complete. Time: 00:00:00, Speed: 0 bytes/s, OK: 207, Errors: 0
+2019-10-29 22:36:27: 
