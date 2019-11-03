@@ -14,15 +14,36 @@ connection = pymysql.connect(host='localhost',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-
+# to do - find better way to make parametric table
 def insert_to_SQL_table(table_name, data):
-    sql = f"INSERT INTO {table_name} VALUES (%s,%s,%s)"
-    insert_tuple = (str(data), date, hour)
-    cursor.execute(sql, insert_tuple)
-    print(
-        f"Data saved: {table_name}:\
-            {data}; date: {date}; time: {hour}")
+    with connection.cursor() as cursor:
+        sql = f"INSERT INTO {table_name} VALUES (%s,%s,%s)"
+        insert_tuple = (str(data), date, hour)
+        cursor.execute(sql, insert_tuple)
+        print(
+            f"Data saved: {table_name}:\
+                {data}; date: {date}; time: {hour}")
 
+
+# create tables to store data from sensors
+with connection.cursor() as cursor:
+    # create table outside_temperature if not exists
+    sql = ('CREATE TABLE IF NOT EXISTS outside_temperature \
+           (temperature double, day date, hour time)')
+    cursor.execute(sql)
+    print('Table outside_temperature created!')
+
+    # create table inside_temperature if not exists
+    sql = ('CREATE TABLE IF NOT EXISTS inside_temperature \
+           (temperature double, day date, hour time)')
+    cursor.execute(sql)
+    print('Table inside_temperature created!')
+
+    # create table inside_humidity if not exists
+    sql = ('CREATE TABLE IF NOT EXISTS inside_humidity \
+           (humidity double, day date, hour time)')
+    cursor.execute(sql)
+    print('Table inside_humidity created!')
 
 # check temperature and write to database in interval
 while True:
