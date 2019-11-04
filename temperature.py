@@ -14,6 +14,8 @@ connection = pymysql.connect(host='localhost',
                              cursorclass=pymysql.cursors.DictCursor)
 
 # to do - find better way to make parametric table
+
+
 def insert_to_SQL_table(table_name, data):
     with connection.cursor() as cursor:
         sql = f"INSERT INTO {table_name} VALUES (%s,%s,%s)"
@@ -28,17 +30,20 @@ def insert_to_SQL_table(table_name, data):
 with connection.cursor() as cursor:
     # create table outside_temperature if not exists
     sql = ('CREATE TABLE IF NOT EXISTS outside_temperature \
-           (temperature double, day date, hour time)')
+           (id int NOT NULL AUTO_INCREMENT, temperature double, \
+            day date, hour time, PRIMARY KEY (id))')
     cursor.execute(sql)
 
     # create table inside_temperature if not exists
     sql = ('CREATE TABLE IF NOT EXISTS inside_temperature \
-           (temperature double, day date, hour time)')
+           (id int NOT NULL AUTO_INCREMENT, temperature double, \
+            day date, hour time, PRIMARY KEY (id))')
     cursor.execute(sql)
 
     # create table inside_humidity if not exists
     sql = ('CREATE TABLE IF NOT EXISTS inside_humidity \
-           (humidity double, day date, hour time)')
+           (id int NOT NULL AUTO_INCREMENT, humidity double, \
+           day date, hour time, PRIMARY KEY (id))')
     cursor.execute(sql)
 
 # check temperature and write to database in interval
@@ -74,7 +79,7 @@ while True:
     try:
         with connection.cursor() as cursor:
             # write to outside_temperature table
-            sql = "INSERT INTO outside_temperature VALUES (%s,%s,%s)"
+            sql = "INSERT INTO outside_temperature VALUES (NULL,%s,%s,%s)"
             insert_tuple = (str(outside_temp), date, hour)
             cursor.execute(sql, insert_tuple)
             print(
@@ -82,7 +87,7 @@ while True:
                 {outside_temp}; date: {date}; time: {hour}")
 
             # write to inside_temperature table
-            sql = "INSERT INTO inside_temperature VALUES (%s,%s,%s)"
+            sql = "INSERT INTO inside_temperature VALUES (NULL,%s,%s,%s)"
             insert_tuple = (str(inside_temp), date, hour)
             cursor.execute(sql, insert_tuple)
             print(
@@ -90,7 +95,7 @@ while True:
                 {inside_temp}; date: {date}; time: {hour}")
 
             # write to inside_humidity table
-            sql = "INSERT INTO inside_humidity VALUES (%s,%s,%s)"
+            sql = "INSERT INTO inside_humidity VALUES (NULL,%s,%s,%s)"
             insert_tuple = (str(humidity), date, hour)
             cursor.execute(sql, insert_tuple)
             print(
@@ -102,6 +107,7 @@ while True:
     except Exception:
         pass
 
-    connection.close()
     # check temperature in interval
     time.sleep(300)
+
+connection.close()

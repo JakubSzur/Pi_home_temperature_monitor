@@ -3,38 +3,54 @@
 
 from flask import Flask, render_template
 
-from flask_bootstrap import Bootstrap
 import datetime
-import MySQLdb
-#import w1thermsensor
-#import Adafruit_DHT
+import pymysql.cursors
+import pymysql
 
 app = Flask(__name__, template_folder='templates')
-
-bootstrap = Bootstrap(app)
 
 
 @app.route("/")
 def main():
 
+  # get current time
   now = datetime.datetime.now()
-
-  #sensor = w1thermsensor.W1ThermSensor()
-  #sensor = w1thermsensor.W1ThermSensor()
-  #temp = sensor.get_temperature()
-
-  #sensor = Adafruit_DHT.DHT11
-  #gpio = 17
-  #humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
-
   timeString = now.strftime("%Y-%m-%d %H:%M")
-  # temp_and_humidity = 'Temp={0:0.1f}*C  Humidity={1:0.1f}%'.format(
-  #    temperature, humidity)
+
+  # connect to database
+  connection = pymysql.connect(host='localhost',
+                               user='root',
+                               password='root',
+                               db='PiTemperature',
+                               charset='utf8mb4',
+                               cursorclass=pymysql.cursors.DictCursor)
+
+  # write querry to find last record from DB
+  with connection.cursor() as cursor:
+    # get outside temperature
+    sql = ('SELECT temperature FROM  outside_temperature ORDER BY\
+                ID DESC LIMIT 1')
+    cursor.execute(sql)
+    outside_temperature = cursor.fetchone()['temperature']
+
+    # get inside temperature
+    sql = ('SELECT temperature FROM  inside_temperature ORDER BY\
+                ID DESC LIMIT 1')
+    cursor.execute(sql)
+    inside_temperature = cursor.fetchone()['temperature']
+
+    # get inside humidity
+    sql = ('SELECT humidity FROM  inside_humidity ORDER BY\
+                ID DESC LIMIT 1')
+    cursor.execute(sql)
+    inside_humidity = cursor.fetchone()['humidity']
+
   templateData = {
       'title': 'Pi Temperature Monitor',
       'time': timeString,
-      'temperature': '23',
-      'temperature_and_humidity': '24'
+      'outside_temperature': outside_temperature,
+      'inside_temperature': inside_temperature,
+      'inside_humidity': inside_humidity
   }
   return render_template('main.html', **templateData)
 
