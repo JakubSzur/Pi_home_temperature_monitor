@@ -5,7 +5,6 @@ from datetime import datetime
 import pymysql.cursors
 import pymysql
 import Adafruit_DHT
-import Adafruit_DHT.errors
 
 connection = pymysql.connect(host='localhost',
                              user='root',
@@ -31,19 +30,16 @@ with connection.cursor() as cursor:
     sql = ('CREATE TABLE IF NOT EXISTS outside_temperature \
            (temperature double, day date, hour time)')
     cursor.execute(sql)
-    print('Table outside_temperature created!')
 
     # create table inside_temperature if not exists
     sql = ('CREATE TABLE IF NOT EXISTS inside_temperature \
            (temperature double, day date, hour time)')
     cursor.execute(sql)
-    print('Table inside_temperature created!')
 
     # create table inside_humidity if not exists
     sql = ('CREATE TABLE IF NOT EXISTS inside_humidity \
            (humidity double, day date, hour time)')
     cursor.execute(sql)
-    print('Table inside_humidity created!')
 
 # check temperature and write to database in interval
 while True:
@@ -64,13 +60,15 @@ while True:
         outside_temp = 'NULL'
 
     # get inside temperature and humidity from  sensor
-    try:
-        sensor = Adafruit_DHT.DHT11
-        gpio = 17
+    sensor = Adafruit_DHT.DHT11
+    gpio = 17
+    humidity, inside_temp = Adafruit_DHT.read_retry(sensor, gpio)
 
-    except Adafruit_DHT.errors:
-        inside_temp = 'NULL'
+    # if measure is wrong, write NULL value to record
+    if humidity is None:
         humidity = 'NULL'
+    elif inside_temp is None:
+        inside_temp = 'NULL'
 
     # write data to database
     try:
@@ -101,8 +99,9 @@ while True:
 
             connection.commit()
 
-    finally:
+    except Exception:
         pass
-        # connection.close()
-    # check temperature every 5 minutes
+
+    connection.close()
+    # check temperature in interval
     time.sleep(300)
