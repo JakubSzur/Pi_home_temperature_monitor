@@ -13,19 +13,6 @@ connection = pymysql.connect(host='localhost',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-# to do - find better way to make parametric table
-
-
-def insert_to_SQL_table(table_name, data):
-    with connection.cursor() as cursor:
-        sql = f"INSERT INTO {table_name} VALUES (%s,%s,%s)"
-        insert_tuple = (str(data), date, hour)
-        cursor.execute(sql, insert_tuple)
-        print(
-            f"Data saved: {table_name}:\
-                {data}; date: {date}; time: {hour}")
-
-
 # create tables to store data from sensors
 with connection.cursor() as cursor:
     # create table outside_temperature if not exists
