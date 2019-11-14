@@ -52,6 +52,7 @@ def main():
       'inside_temperature': inside_temperature,
       'inside_humidity': inside_humidity
   }
+  templateData['time1']=5
   return render_template('main.html', **templateData)
 
 
