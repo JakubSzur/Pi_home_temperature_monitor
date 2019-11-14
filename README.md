@@ -8,6 +8,6 @@ Project of raspberry pi zero connected with temperature and humidity sensors to 
 ## Technologies
 
 * Python version: 3.7
-* MySQL
+* MySQL/MariaDB
 * Flask
 * Raspberry Pi Zero
