@@ -1,4 +1,11 @@
 body {
-   background: blue;
-   color: yellow;
+      background: url(../background.JPG);
+      background-size: 100%;
+      background-repeat: no-repeat;
+      color:black;
+    }
+table {
+   table-layout: auto;
+   width:1%;
+   white-space:nowrap;
 }

@@ -118,6 +118,8 @@ dmypy.json
 # Folder from auto sftp 
 _gsdata_/*
 
+# File with APPD to get data from OpenWeather API
+APPID.txt
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

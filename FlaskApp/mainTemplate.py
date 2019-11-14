@@ -6,6 +6,7 @@ from flask import Flask, render_template
 import datetime
 import pymysql.cursors
 import pymysql
+import OpenWeatherAPI
 
 app = Flask(__name__, template_folder='templates')
 
@@ -19,11 +20,11 @@ def main():
 
   # connect to database
   connection = pymysql.connect(host='localhost',
-                               user='root',
-                               password='root',
-                               db='PiTemperature',
-                               charset='utf8mb4',
-                               cursorclass=pymysql.cursors.DictCursor)
+                                user='root',
+                                password='root',
+                                db='PiTemperature',
+                                charset='utf8mb4',
+                                cursorclass=pymysql.cursors.DictCursor)
 
   # write querry to find last record from DB
   with connection.cursor() as cursor:
@@ -52,6 +53,25 @@ def main():
       'inside_temperature': inside_temperature,
       'inside_humidity': inside_humidity
   }
+
+  # get JSON file with weather forecast
+  get_JSON_file = OpenWeatherAPI.get_json()
+  parsed_JSON = OpenWeatherAPI.parse_data(get_JSON_file)
+
+  # iterate througth list with weather values and add
+  # them to the dictionary
+  for i in range(len(parsed_JSON)):
+    templateData[f'time{i+1}']=parsed_JSON[i].time
+    templateData[f'temp{i+1}']=parsed_JSON[i].temperature
+    templateData[f'desc{i+1}']=parsed_JSON[i].description
+    templateData[f'pressure{i+1}']=parsed_JSON[i].pressure
+    templateData[f'humidity{i+1}']=parsed_JSON[i].humidity
+    try:
+      templateData[f'rain{i+1}']=parsed_JSON[i].rain
+    except:
+      pass
+    templateData[f'snow{i+1}']=parsed_JSON[i].snow
+
   return render_template('main.html', **templateData)
 
 
