@@ -8,7 +8,7 @@ import pymysql.cursors
 import pymysql
 import OpenWeatherAPI
 
-app = Flask(__name__, template_folder='templates',static_url_path='/static')
+app = Flask(__name__, template_folder='templates')
 
 
 @app.route("/")
