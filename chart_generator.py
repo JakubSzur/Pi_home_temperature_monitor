@@ -3,6 +3,7 @@ import pymysql
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 import datetime
+from datetime import datetime
 
 # connect to database
 connection = pymysql.connect(host='localhost',
@@ -52,6 +53,7 @@ def datatime_query(hours, timestamp, value, table):
             hours = f'0{hours}'
         minutes = int((time_in_seconds%3600)/60)
         minutes = str(minutes)
+
         if len(minutes)==1:
             minutes = f'0{minutes}'
 
@@ -62,8 +64,8 @@ def datatime_query(hours, timestamp, value, table):
 
 
 # function to draw linear plot
-def draw_linear_plot(xdata, ydata, xlabel, ylabel):
-    plt.plot(xdata, ydata)
+def draw_linear_plot(xdata, ydata, xlabel, ylabel, color):
+    plt.plot(xdata, ydata, color=color)
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
     #plt.grid(True, axis='y')
@@ -71,13 +73,19 @@ def draw_linear_plot(xdata, ydata, xlabel, ylabel):
     ax = plt.axes()
     ax.xaxis.set_major_locator(plt.MaxNLocator(24))
     plt.xticks(rotation=70)
-    plt.show()
-
+    now = datetime.now()
+    date_time = now.strftime("%m:%d:%Y")
+    plt.savefig(f'FlaskApp/static/charts/{date_time}_{ylabel}.png',dpi=400)
+    plt.close('all')
 
 if __name__ == "__main__":
 
-    outside_temperature = (query_to_get_rows(24, 5, 'temperature', 'outside_temperature'))
-    time = datatime_query(24, 5, 'hour', 'outside_temperature')
-    #print(query_to_get_rows(24, 'humidity', 'inside_humidity', 5))
+    outside_temperature = (query_to_get_rows(23, 5, 'temperature', 'outside_temperature'))
+    inside_temperature = (query_to_get_rows(23, 5, 'temperature', 'inside_temperature'))
+    time = datatime_query(23, 5, 'hour', 'outside_temperature')
+    humidity = (query_to_get_rows(23, 5, 'humidity', 'inside_humidity'))
 
-    draw_linear_plot(time,outside_temperature, 'time', 'outside temperature')
+    draw_linear_plot(time, humidity, 'time', 'humidity', 'slateblue')
+    draw_linear_plot(time, outside_temperature, 'time', 'outside temperature', 'midnightblue')
+    draw_linear_plot(time, inside_temperature, 'time', 'inside temperature', 'red')
+  
