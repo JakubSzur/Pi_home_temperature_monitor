@@ -46,14 +46,12 @@ def datatime_query(hours, timestamp, value, table):
     # convert and add data to list
     for i in time_to_convert:
         time_in_seconds = i.seconds
-
         hours = int(time_in_seconds/3600)
         hours = str(hours)
         if len(hours)==1:
             hours = f'0{hours}'
         minutes = int((time_in_seconds%3600)/60)
         minutes = str(minutes)
-
         if len(minutes)==1:
             minutes = f'0{minutes}'
 
@@ -65,27 +63,41 @@ def datatime_query(hours, timestamp, value, table):
 
 # function to draw linear plot
 def draw_linear_plot(xdata, ydata, xlabel, ylabel, color):
+    #draw linear plot with x and y data with specified color
     plt.plot(xdata, ydata, color=color)
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
-    #plt.grid(True, axis='y')
+    # show grid on plot
     plt.grid(True)
+   
     ax = plt.axes()
+     # set number of ticks on x axis
     ax.xaxis.set_major_locator(plt.MaxNLocator(24))
+    # set rotation of ticks
     plt.xticks(rotation=70)
+    # create name of png file to save
     now = datetime.now()
     date_time = now.strftime("%m:%d:%Y")
+    # save fiel to specific path
     plt.savefig(f'FlaskApp/static/charts/{date_time}_{ylabel}.png',dpi=400)
+    # close matplotlib
     plt.close('all')
 
 if __name__ == "__main__":
 
+    # get list of outside temperature values
     outside_temperature = (query_to_get_rows(23, 5, 'temperature', 'outside_temperature'))
+    # get list of inside temperature values
     inside_temperature = (query_to_get_rows(23, 5, 'temperature', 'inside_temperature'))
+    # get list of time needed for x axis of plot
     time = datatime_query(23, 5, 'hour', 'outside_temperature')
+    # get list of humidity values
     humidity = (query_to_get_rows(23, 5, 'humidity', 'inside_humidity'))
 
-    draw_linear_plot(time, humidity, 'time', 'humidity', 'slateblue')
+    # generate outside tempearature plot
     draw_linear_plot(time, outside_temperature, 'time', 'outside temperature', 'midnightblue')
+    # generate inside temperature plot
     draw_linear_plot(time, inside_temperature, 'time', 'inside temperature', 'red')
+    # generate humidity plot
+    draw_linear_plot(time, humidity, 'time', 'humidity', 'slateblue')
   
