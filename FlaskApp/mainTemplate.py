@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 import datetime
 import pymysql.cursors
 import pymysql
 import OpenWeatherAPI
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates',static_url_path='/static')
 
 
 @app.route("/")
@@ -71,6 +71,9 @@ def main():
     except:
       pass
     templateData[f'snow{i+1}']=parsed_JSON[i].snow
+  
+  # add charts paths
+
 
   return render_template('main.html', **templateData)
 
