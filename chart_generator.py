@@ -85,14 +85,19 @@ def draw_linear_plot(xdata, ydata, xlabel, ylabel, color):
 
 if __name__ == "__main__":
 
-    # get list of outside temperature values
-    outside_temperature = (query_to_get_rows(23, 5, 'temperature', 'outside_temperature'))
-    # get list of inside temperature values
-    inside_temperature = (query_to_get_rows(23, 5, 'temperature', 'inside_temperature'))
-    # get list of time needed for x axis of plot
-    time = datatime_query(23, 5, 'hour', 'outside_temperature')
-    # get list of humidity values
-    humidity = (query_to_get_rows(23, 5, 'humidity', 'inside_humidity'))
+
+    # variables to draw plots from last 23 hours
+    time_period = 23
+    timestamp = 5
+
+    # get list of outside temperature values from 23 last hours
+    outside_temperature = (query_to_get_rows(time_period, timestamp, 'temperature', 'outside_temperature'))
+    # get list of inside temperature values from 23 lat hours
+    inside_temperature = (query_to_get_rows(time_period, timestamp, 'temperature', 'inside_temperature'))
+    # get list of time needed for x axis of plot from 23 lat hours
+    time = datatime_query(time_period, timestamp, 'hour', 'outside_temperature')
+    # get list of humidity values from 23 lat hours
+    humidity = (query_to_get_rows(time_period, timestamp, 'humidity', 'inside_humidity'))
 
     # generate outside tempearature plot
     draw_linear_plot(time, outside_temperature, 'time', 'outside temperature', 'midnightblue')
@@ -101,3 +106,24 @@ if __name__ == "__main__":
     # generate humidity plot
     draw_linear_plot(time, humidity, 'time', 'humidity', 'slateblue')
   
+    ''' to do: replace time list with date list
+    # variables to draw plots from week
+    time_period = 24*7
+
+    # get list of outside temperature values from 7 days
+    outside_temperature = (query_to_get_rows(time_period, timestamp, 'temperature', 'outside_temperature'))
+    # get list of inside temperature values from from 7 days
+    inside_temperature = (query_to_get_rows(time_period, timestamp, 'temperature', 'inside_temperature'))
+    # to do: check type of data:
+    # get list of date needed for x axis of plot from 7 days
+    #time = datatime_query(time_period, timestamp, 'hour', 'outside_temperature')
+    # get list of humidity values from from 7 days
+    humidity = (query_to_get_rows(time_period, timestamp, 'humidity', 'inside_humidity'))
+
+    # generate outside tempearature plot
+    draw_linear_plot(date, outside_temperature, 'date', 'outside temperature', 'midnightblue')
+    # generate inside temperature plot
+    draw_linear_plot(date, inside_temperature, 'date', 'inside temperature', 'red')
+    # generate humidity plot
+    draw_linear_plot(time, humidity, 'time', 'humidity', 'slateblue')
+    '''

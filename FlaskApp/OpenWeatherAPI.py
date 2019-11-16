@@ -78,4 +78,4 @@ def parse_data(json_file):
 
 
 if __name__ == "__main__":
-    parse_data(get_json())
+    pass
