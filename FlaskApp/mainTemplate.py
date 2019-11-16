@@ -7,6 +7,7 @@ import datetime
 import pymysql.cursors
 import pymysql
 import OpenWeatherAPI
+import get_chart_path
 
 app = Flask(__name__, template_folder='templates')
 
@@ -72,8 +73,29 @@ def main():
       pass
     templateData[f'snow{i+1}']=parsed_JSON[i].snow
   
-  # add charts paths
+  # get list with paths
+  list_with_chart_paths = get_chart_path.find_charts('static/img',6)
+  # begining of url_for formula to join with image path
+  url_for_string  = 'src=\"{{url_for(\'static\', filename=\')'
+  # add paths to dictionary to display charts
 
+  # to do: change name of chart to avoid multiply if statement
+
+  #chart_titles=['outside temperature', 'inside temperature',]
+
+  for i in list_with_chart_paths:
+    if 'outside temperature' in i:
+      templateData['outside_temperature_chart']=f'\"{url_for_string}/{i}\')}}\"'
+    elif 'inside temperature' in i:
+      templateData['inside_temperature_chart']=f'\"{url_for_string}/{i}\')}}\"'
+    elif 'humidity' in i:
+      templateData['humidity_chart']=f'\"{url_for_string}/{i}\')}}\"'
+    elif 'weekly outside temperature' in i:
+      templateData['weekly_outside_temperature_chart']=f'\"{url_for_string}/{i}\')}}\"'
+    elif 'weekly inside temperature' in i:
+      templateData['weekly_inside_temperature_chart']=f'\"{url_for_string}/{i}\')}}\"'
+    elif 'weekly humidity' in i:
+      templateData['weekly_humidity_chart']=f'\"{url_for_string}/{i}\')}}\"'
 
   return render_template('main.html', **templateData)
 
