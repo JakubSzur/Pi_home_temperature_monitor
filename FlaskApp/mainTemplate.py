@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 
 import datetime
 import pymysql.cursors
 import pymysql
 import OpenWeatherAPI
+import get_chart_path
 
 app = Flask(__name__, template_folder='templates')
 
@@ -71,6 +72,23 @@ def main():
     except:
       pass
     templateData[f'snow{i+1}']=parsed_JSON[i].snow
+  
+  # get list with paths
+  list_with_chart_paths = get_chart_path.find_charts('static/img',6)
+  # begining of url_for formula to join with image path
+  url_for_string  = 'src=\"{{url_for(\'static\', filename=\')'
+
+  # add paths to dictionary to display charts
+  chart_names = get_chart_path.get_chart_name(list_with_chart_paths)
+
+  for i in list_with_chart_paths:
+
+    for k in chart_names:
+      if k in i:
+        # change space to underscore
+        k.replace(' ','_')
+        # write url_for formula to dictionary
+        templateData[f'{k}_chart']=f'\"{url_for_string}/{i}\')}}\"'
 
   return render_template('main.html', **templateData)
 

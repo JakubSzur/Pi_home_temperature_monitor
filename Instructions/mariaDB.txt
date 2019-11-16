@@ -1,0 +1,5 @@
+Log into maria DB:
+
+type following command in terminal:
+
+mysql --user=root --password=root PiTemperature
