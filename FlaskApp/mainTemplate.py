@@ -77,25 +77,18 @@ def main():
   list_with_chart_paths = get_chart_path.find_charts('static/img',6)
   # begining of url_for formula to join with image path
   url_for_string  = 'src=\"{{url_for(\'static\', filename=\')'
+
   # add paths to dictionary to display charts
-
-  # to do: change name of chart to avoid multiply if statement
-
-  #chart_titles=['outside temperature', 'inside temperature',]
+  chart_names = get_chart_path.get_chart_name(list_with_chart_paths)
 
   for i in list_with_chart_paths:
-    if 'outside temperature' in i:
-      templateData['outside_temperature_chart']=f'\"{url_for_string}/{i}\')}}\"'
-    elif 'inside temperature' in i:
-      templateData['inside_temperature_chart']=f'\"{url_for_string}/{i}\')}}\"'
-    elif 'humidity' in i:
-      templateData['humidity_chart']=f'\"{url_for_string}/{i}\')}}\"'
-    elif 'weekly outside temperature' in i:
-      templateData['weekly_outside_temperature_chart']=f'\"{url_for_string}/{i}\')}}\"'
-    elif 'weekly inside temperature' in i:
-      templateData['weekly_inside_temperature_chart']=f'\"{url_for_string}/{i}\')}}\"'
-    elif 'weekly humidity' in i:
-      templateData['weekly_humidity_chart']=f'\"{url_for_string}/{i}\')}}\"'
+
+    for k in chart_names:
+      if k in i:
+        # change space to underscore
+        k.replace(' ','_')
+        # write url_for formula to dictionary
+        templateData[f'{k}_chart']=f'\"{url_for_string}/{i}\')}}\"'
 
   return render_template('main.html', **templateData)
 

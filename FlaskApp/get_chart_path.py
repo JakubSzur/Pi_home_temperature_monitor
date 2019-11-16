@@ -38,7 +38,19 @@ def find_charts(path, quantity):
         interator+=1
     
     return image_paths
+
+# split file name of chart to get chart name
+def get_chart_name(image_paths):
+    # list to return charts name
+    chart_name = []
+    for i in image_paths:
+        # split chart after third '_' and before '.'
+        i=i.split('_',3)[3].split('.',-1)[0]
+        chart_name.append(i)
+    
+    return chart_name
     
 
 if __name__ == "__main__":
-    print(find_charts('static/img',6))
+    image_paths=(find_charts('static/img',6))
+    print(get_chart_name(image_paths))
