@@ -33,7 +33,7 @@ def query_to_get_rows(hours, timestamp, value, table):
     for i in query_result:
         query_result_list.append(i[value])
 
-    return (query_result_list)
+    return query_result_list
 
 
 # function to convert list with time to readable string format

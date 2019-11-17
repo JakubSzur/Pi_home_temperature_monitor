@@ -4,7 +4,7 @@
 
 Project of raspberry pi connected with temperature and humidity sensors to monitor this values at home and outside. 
 Measurement of outside temperature, inside temperature and inside humidity is writing to MySQL database.
-User can see measurement throught Flask WebSerwer running on raspberry Pi.
+User can see measurement throught Flask WebServer running on raspberry Pi.
 Flask WebServer is connected with OpenWeather API and getting information about forecast of weather of the following 24 hours.
 After every day of measurements statistics in form of charts in period of last day and week are generated and displayed in WebService.
 
