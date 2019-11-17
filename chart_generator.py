@@ -36,10 +36,7 @@ def query_to_get_rows(connection ,hours, timestamp, value, table):
         query_result = cursor.fetchall()
 
     # list to collect data from query
-    query_result_list = []
-    # add data from query to list
-    for i in query_result:
-        query_result_list.append(i[value])
+    query_result_list=[i[value] for i in query_result]
 
     return query_result_list
 
