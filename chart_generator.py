@@ -13,7 +13,7 @@ connection = pymysql.connect(host='localhost',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-
+# to do: change database time and date to datatime format!!!
 # function to get data from DB i specified range of time
 def query_to_get_rows(hours, timestamp, value, table):
     # number of rows to get with measurement in timestamp of measurement
