@@ -6,6 +6,7 @@ from flask import Flask, render_template, url_for
 import datetime
 import pymysql.cursors
 import pymysql
+
 import OpenWeatherAPI
 import get_chart_path
 
