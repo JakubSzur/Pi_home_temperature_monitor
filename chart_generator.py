@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import datetime
 from datetime import datetime
 
-# connect to database
+# connect to database !!! move to DB file
 def database_connection():
     # get credentials to connect with DB from file
     with open('FlaskApp/DB_credentials.txt') as file:
@@ -18,10 +18,10 @@ def database_connection():
                                 db = db,
                                 charset = 'utf8mb4',
                                 cursorclass = pymysql.cursors.DictCursor)
-
     return connection
 
 # to do: change database time and date to datatime format!!!
+# !!! move to DB file
 # function to get data from DB i specified range of time
 def query_to_get_rows(connection ,hours, timestamp, value, table):
     # number of rows to get with measurement in timestamp of measurement
@@ -43,31 +43,23 @@ def query_to_get_rows(connection ,hours, timestamp, value, table):
 
 # function to convert list with time to readable string format
 # time from query is in the datetime.timedelta format
+# !!! move to DB file
 def datatime_query(hours, timestamp, value, table):
     # get data with time from query
-    time_to_convert = query_to_get_rows(hours, timestamp, value, table)
+    time_to_convert = query_to_get_rows(connection, hours, timestamp, value, table)
     # list to collect converted data
     readable_time = []
     # convert and add data to list
     for i in time_to_convert:
-        time_in_seconds = i.seconds
-        hours = int(time_in_seconds/3600)
-        hours = str(hours)
-        if len(hours)==1:
-            hours = f'0{hours}'
-        minutes = int((time_in_seconds%3600)/60)
-        minutes = str(minutes)
-        if len(minutes)==1:
-            minutes = f'0{minutes}'
-
-        time = f'{hours}:{minutes}'
-        readable_time.append(time)
+        if len(hours)==1: hours = f'0{str(int(i.seconds/3600))}'
+        if len(minutes)==1: minutes = f'0{str(int((i.seconds%3600)/60))}'
+        readable_time.append(f'{hours}:{minutes}')
 
     return readable_time
 
 
 # function to draw linear plot
-def draw_linear_plot(xdata, ydata, xlabel, ylabel, color):
+def draw_linear_plot(xdata, ydata, xlabel, ylabel, color, ticks):
     #draw linear plot with x and y data with specified color
     plt.plot(xdata, ydata, color=color)
     plt.ylabel(ylabel)
@@ -77,7 +69,7 @@ def draw_linear_plot(xdata, ydata, xlabel, ylabel, color):
    
     ax = plt.axes()
      # set number of ticks on x axis
-    ax.xaxis.set_major_locator(plt.MaxNLocator(24))
+    ax.xaxis.set_major_locator(plt.MaxNLocator(ticks))
     # set rotation of ticks
     plt.xticks(rotation=70)
     # create name of png file to save
@@ -94,8 +86,7 @@ if __name__ == "__main__":
     connection = database_connection()
 
     # variables to draw plots from last 23 hours
-    time_period = 23
-    timestamp = 5
+    time_period = 23, timestamp = 5, ticks = 24
 
     # get list of outside temperature values from 23 last hours
     outside_temperature = query_to_get_rows(connection, time_period, timestamp, 'temperature', 'outside_temperature')
@@ -107,11 +98,11 @@ if __name__ == "__main__":
     humidity = query_to_get_rows(connection, time_period, timestamp, 'humidity', 'inside_humidity')
 
     # generate outside tempearature plot
-    draw_linear_plot(time, outside_temperature, 'time', 'outside temperature', 'midnightblue')
+    draw_linear_plot(time, outside_temperature, 'time', 'outside temperature', 'midnightblue', ticks)
     # generate inside temperature plot
-    draw_linear_plot(time, inside_temperature, 'time', 'inside temperature', 'red')
+    draw_linear_plot(time, inside_temperature, 'time', 'inside temperature', 'red', ticks)
     # generate humidity plot
-    draw_linear_plot(time, humidity, 'time', 'humidity', 'slateblue')
+    draw_linear_plot(time, humidity, 'time', 'humidity', 'slateblue', ticks)
   
     ''' to do: replace time list with date list
     # variables to draw plots from week
