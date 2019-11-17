@@ -1,21 +1,29 @@
 import pymysql.cursors
 import pymysql
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
 import datetime
 from datetime import datetime
 
 # connect to database
-connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='root',
-                             db='PiTemperature',
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+def database_connection():
+    # get credentials to connect with DB from file
+    with open('FlaskApp/DB_credentials.txt') as file:
+        credentials = file.readlines()
+        user = credentials[0]
+        password = credentials[1]
+        db = credentials[2]
+    connection = pymysql.connect(host='localhost',
+                                user = user,
+                                password = password,
+                                db = db,
+                                charset = 'utf8mb4',
+                                cursorclass = pymysql.cursors.DictCursor)
+
+    return connection
 
 # to do: change database time and date to datatime format!!!
 # function to get data from DB i specified range of time
-def query_to_get_rows(hours, timestamp, value, table):
+def query_to_get_rows(connection ,hours, timestamp, value, table):
     # number of rows to get with measurement in timestamp of measurement
     rows = int((hours*60)/timestamp)
 
@@ -85,19 +93,21 @@ def draw_linear_plot(xdata, ydata, xlabel, ylabel, color):
 
 if __name__ == "__main__":
 
+    # connect to database
+    connection = database_connection()
 
     # variables to draw plots from last 23 hours
     time_period = 23
     timestamp = 5
 
     # get list of outside temperature values from 23 last hours
-    outside_temperature = (query_to_get_rows(time_period, timestamp, 'temperature', 'outside_temperature'))
+    outside_temperature = query_to_get_rows(connection, time_period, timestamp, 'temperature', 'outside_temperature')
     # get list of inside temperature values from 23 lat hours
-    inside_temperature = (query_to_get_rows(time_period, timestamp, 'temperature', 'inside_temperature'))
+    inside_temperature = query_to_get_rows(connection, time_period, timestamp, 'temperature', 'inside_temperature')
     # get list of time needed for x axis of plot from 23 lat hours
-    time = datatime_query(time_period, timestamp, 'hour', 'outside_temperature')
+    time = datatime_query(connection, time_period, timestamp, 'hour', 'outside_temperature')
     # get list of humidity values from 23 lat hours
-    humidity = (query_to_get_rows(time_period, timestamp, 'humidity', 'inside_humidity'))
+    humidity = query_to_get_rows(connection, time_period, timestamp, 'humidity', 'inside_humidity')
 
     # generate outside tempearature plot
     draw_linear_plot(time, outside_temperature, 'time', 'outside temperature', 'midnightblue')
