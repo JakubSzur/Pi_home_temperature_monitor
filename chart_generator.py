@@ -30,9 +30,9 @@ def draw_linear_plot(xdata, ydata, xlabel, ylabel, color, ticks):
     plt.xticks(rotation=70)
     # create name of png file to save
     now = datetime.now()
-    date_time = now.strftime("%m:%d:%Y")
+    date_time = now.strftime("%m_%d_%Y")
     # save fiel to specific path
-    plt.savefig(f'FlaskApp/static/charts/{date_time}_{ylabel}.png', dpi=400)
+    plt.savefig(f'FlaskApp/static/img/{date_time}_{ylabel}.png', dpi=400)
     # close matplotlib
     plt.close('all')
 

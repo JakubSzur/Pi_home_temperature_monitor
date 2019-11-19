@@ -45,6 +45,7 @@ def get_chart_name(image_paths):
     chart_name = []
     for i in image_paths:
         # split chart after third '_' and before '.'
+        print(i)
         i=i.split('_',3)[3].split('.',-1)[0]
         chart_name.append(i)
     

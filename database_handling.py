@@ -17,9 +17,9 @@ def database_connection():
     # get credentials from txt file to connect with DB
     with open('FlaskApp/DB_credentials.txt') as file:
         credentials = file.readlines()
-        user = credentials[0]
-        password = credentials[1]
-        db = credentials[2]
+        user = credentials[0].split('\n')[0]
+        password = credentials[1].split('\n')[0]
+        db = credentials[2].split('\n')[0]
     connection = pymysql.connect(host='localhost',
                                  user=user,
                                  password=password,
@@ -84,9 +84,9 @@ def datatime_query(connection, hours, timestamp, value, table):
     readable_time = []
     # convert and add data to list
     for i in time_to_convert:
-        if len(hours) == 1:
+        if len(str(hours)) == 1:
             hours = f'0{str(int(i.seconds/3600))}'
-        if len(timestamp) == 1:
+        if len(str(timestamp)) == 1:
             minutes = f'0{str(int((i.seconds%3600)/60))}'
         readable_time.append(f'{hours}:{minutes}')
 
