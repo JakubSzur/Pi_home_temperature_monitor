@@ -5,6 +5,18 @@ import database_handling as db
 
 # function to draw linear plot
 def draw_linear_plot(xdata, ydata, xlabel, ylabel, color, ticks):
+    """Draw and save linear plot.
+
+    Parameters:
+        xdata(list):List with data for x axis of chart.
+        ydata(list):List with data for y axis of chart.
+        xlabel(string):Label for x axis.
+        ylabel(string):Label for y axis.
+        color(string):Color for line of plot.
+        ticks(int):Number of ticks on x axis.
+
+
+    """
     # draw linear plot with x and y data with specified color
     plt.plot(xdata, ydata, color=color)
     plt.ylabel(ylabel)
