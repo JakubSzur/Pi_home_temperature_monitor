@@ -77,7 +77,7 @@ def main():
   # get list with paths
   list_with_chart_paths = get_chart_path.find_charts('static/img',6)
   # begining of url_for formula to join with image path
-  url_for_string  = 'src=\"{{url_for(\'static\', filename=\')'
+  url_for_string  = 'url_for(\'static\', filename=\''
 
   # add paths to dictionary to display charts
   chart_names = get_chart_path.get_chart_name(list_with_chart_paths)
@@ -87,10 +87,12 @@ def main():
     for k in chart_names:
       if k in i:
         # change space to underscore
-        k.replace(' ','_')
+        k=k.replace(' ','_')
         # write url_for formula to dictionary
-        templateData[f'{k}_chart']=f'\"{url_for_string}/{i}\')}}\"'
-
+        #print(f'{url_for_string}{i}\')')
+        #templateData[f'{k}_chart']=f'{url_for_string}{i}\')'
+        templateData[f'{k}_chart']=i
+  print(templateData.get( 'test:::::'+'outside_temperature_chart'))
   return render_template('main.html', **templateData)
 
 

@@ -18,7 +18,7 @@ def find_charts(path, quantity):
         
         for file in files:
             # relative path to file from 'static' folder
-            image_path = f'img/{file}'
+            image_path = f'{file}'
             # date of modification
             date = os.path.getctime(f'{path}/{file}')
 

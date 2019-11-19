@@ -113,7 +113,7 @@ if __name__ == "__main__":
     draw_linear_plot(time, outside_temperature, 'time',
                      'outside temperature', 'midnightblue', ticks)
     # generate inside temperature plot
-    draw_linear_plot(time, inside_temperature, 'time', 'inside temperature',
+    draw_linear_plot(time, inside_temperature, 'time', 'inside_temperature',
                      'red', ticks)
     # generate humidity plot
     draw_linear_plot(time, humidity, 'time', 'humidity', 'slateblue', ticks)

@@ -118,6 +118,12 @@ dmypy.json
 # Folder from auto sftp 
 _gsdata_/*
 
+# Folder with generated charts
+FlaskApp/static/img/*
+
+# Folder with VC code files
+.vscode/*
+
 # File with APPD to get data from OpenWeather API
 APPID.txt
 
