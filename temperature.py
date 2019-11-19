@@ -5,33 +5,14 @@ from datetime import datetime
 import pymysql.cursors
 import pymysql
 import Adafruit_DHT
+import database_handling as db
 
-connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='root',
-                             db='PiTemperature',
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+# connect to database
+connection = db.database_connection()
 
 # create tables to store data from sensors
-with connection.cursor() as cursor:
-    # create table outside_temperature if not exists
-    sql = ('CREATE TABLE IF NOT EXISTS outside_temperature \
-           (id int NOT NULL AUTO_INCREMENT, temperature double, \
-            day date, hour time, PRIMARY KEY (id))')
-    cursor.execute(sql)
-
-    # create table inside_temperature if not exists
-    sql = ('CREATE TABLE IF NOT EXISTS inside_temperature \
-           (id int NOT NULL AUTO_INCREMENT, temperature double, \
-            day date, hour time, PRIMARY KEY (id))')
-    cursor.execute(sql)
-
-    # create table inside_humidity if not exists
-    sql = ('CREATE TABLE IF NOT EXISTS inside_humidity \
-           (id int NOT NULL AUTO_INCREMENT, humidity double, \
-           day date, hour time, PRIMARY KEY (id))')
-    cursor.execute(sql)
+tables = ['outside_temperature', 'inside_temperature', 'inside_humidity']
+db.create_tables(connection, tables)
 
 # check temperature and write to database in interval
 while True:

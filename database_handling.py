@@ -29,13 +29,32 @@ def database_connection():
     return connection
 
 
+def create_tables(connection, tables):
+    """Create tables if not exists.
+
+    Parameters:
+        connection (obj):Object returned from database_connection().
+        tables(list):List with name of tables to create.
+    Returns:
+        query_result_list(list):List with values from query.
+
+
+    """
+    with connection.cursor() as cursor:
+        # create tables if not exists
+        for table in tables:
+            sql = (f'CREATE TABLE IF NOT EXISTS {table} \
+                (id int NOT NULL AUTO_INCREMENT, temperature double, \
+                    day date, hour time, PRIMARY KEY (id))')
+            cursor.execute(sql)
+
+
 # to do: change database time and date to datatime format!!!
 def query_to_get_rows(connection, hours, timestamp, value, table):
     """Get data from database in specified range of time.
 
     Parameters:
-        connection (obj):Object returned from database_connection().
-                         function
+        connection (obj):Object returned from database_connection().              
         hours(int):Period of time in hours to get data from database.
         timestamp(int):Interval of measuremnts.
         value(string):Value to get from database table.
