@@ -2,8 +2,21 @@ import urllib.request
 import json
 from datetime import datetime
 
-# class to collect wheather values
+
 class Weather:
+    """Weather object contains data parsed from JSON with forecast.
+
+    Attributes:
+        time (int):Time in UNIX format.
+        temperature(float):Forecast temperature.
+        pressure(float):Forecast pressure.
+        humidity(float):Forecast humidity.
+        description(string):Description of forecast weather.
+        rain(string):Description of intensivity of rain.
+        snow(string):Description of intensivity of snow.
+
+
+    """
 
     def __init__(self, time, temperature, pressure, humidity, description,
                  rain=None, snow=None):
@@ -18,8 +31,14 @@ class Weather:
             self.snow = "No snow"
 
 
-# function to get JSON with weather forecast
 def get_json():
+    """Get JSON with weather forecast for Gdańsk.
+
+    Returns:
+        data(list):List with weather forecast values.
+
+
+    """
     # get API key from file to connect with API
     with open('APPID.txt') as file:
         api_key = file.readline()
@@ -33,6 +52,16 @@ def get_json():
 
 # get specific values from JSON and put them into list
 def parse_data(json_file):
+    """Parse list from JSON file.
+
+    Parameters:
+        json_file (list):JSON file parsed to list.
+    Returns:
+        weather_values(list):List with objects of Weather class with assigned
+                             values.
+
+
+    """
     # list to collect objects with values
     weather_values = []
     # get forecast values from JSON file
