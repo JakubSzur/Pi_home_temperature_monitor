@@ -140,10 +140,12 @@ def datatime_query(connection, hours, timestamp, value, table):
     readable_time = []
     # convert and add data to list
     for i in time_to_convert:
+        hours = f'{str(int(i.seconds/3600))}'
         if len(str(hours)) == 1:
-            hours = f'0{str(int(i.seconds/3600))}'
-        if len(str(timestamp)) == 1:
-            minutes = f'0{str(int((i.seconds%3600)/60))}'
+            hours = f'0{hours}'
+        minutes = f'{str(int((i.seconds%3600)/60))}'
+        if len(str(minutes)) == 1:
+            minutes = f'0{minutes}'
         readable_time.append(f'{hours}:{minutes}')
 
     return readable_time

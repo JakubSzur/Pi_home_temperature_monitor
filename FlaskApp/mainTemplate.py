@@ -75,7 +75,7 @@ def main():
     templateData[f'snow{i+1}']=parsed_JSON[i].snow
   
   # get list with paths
-  list_with_chart_paths = get_chart_path.find_charts('static/img',6)
+  list_with_chart_paths = get_chart_path.find_charts('static/img',3)
   # begining of url_for formula to join with image path
   url_for_string  = 'url_for(\'static\', filename=\''
 
