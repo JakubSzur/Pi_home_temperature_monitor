@@ -1,5 +1,6 @@
 import pymysql.cursors
 import pymysql
+from datetime import datetime
 
 
 def database_connection():
@@ -47,6 +48,42 @@ def create_tables(connection, tables):
                 (id int NOT NULL AUTO_INCREMENT, temperature double, \
                     day date, hour time, PRIMARY KEY (id))')
             cursor.execute(sql)
+
+
+def insert_data(connection, tables, values):
+    """Create tables if not exists.
+
+    Parameters:
+        connection (obj):Object returned from database_connection().
+        tables(list):List with names of tables to write data.
+        values(list):List with names of values to write in tables.
+    Returns:
+        Print values saved to database.
+
+
+    """
+    # get date
+    now = datetime.now()
+    date = now.strftime('%Y-%m-%d')
+
+    # get hour
+    hour = now.strftime('%H:%M')
+
+    try:
+        with connection.cursor() as cursor:
+            # write value to table
+            for i in range(len(tables)):
+                sql = f"INSERT INTO {tables[i]} VALUES (NULL,%s,%s,%s)"
+                insert_tuple = (str(values[i]), date, hour)
+                cursor.execute(sql, insert_tuple)
+                print(
+                    f"Data saved: {tables[i]}:\
+                    {values[i]}; date: {date}; time: {hour}")
+
+            connection.commit()
+
+    except Exception:
+        pass
 
 
 # to do: change database time and date to datatime format!!!

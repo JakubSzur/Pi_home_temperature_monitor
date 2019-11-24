@@ -1,7 +1,5 @@
 import w1thermsensor
 import w1thermsensor.errors
-import time
-from datetime import datetime
 import pymysql.cursors
 import pymysql
 import Adafruit_DHT
@@ -16,13 +14,6 @@ db.create_tables(connection, tables)
 
 # check temperature and write to database in interval
 while True:
-
-    # get date
-    now = datetime.now()
-    date = now.strftime('%Y-%m-%d')
-
-    # get hour
-    hour = now.strftime('%H:%M')
 
     # get outside temperature from sensor
     try:
@@ -43,6 +34,8 @@ while True:
     elif inside_temp is None:
         inside_temp = 'NULL'
 
+    # list with values
+    values = [outside_temp, inside_temp, humidity]
     # write data to database
     try:
         with connection.cursor() as cursor:
