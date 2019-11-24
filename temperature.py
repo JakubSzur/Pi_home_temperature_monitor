@@ -1,8 +1,6 @@
 import w1thermsensor
 import w1thermsensor.errors
-import pymysql.cursors
 import time
-import pymysql
 import Adafruit_DHT
 import database_handling as db
 
