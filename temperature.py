@@ -1,6 +1,7 @@
 import w1thermsensor
 import w1thermsensor.errors
 import pymysql.cursors
+import time
 import pymysql
 import Adafruit_DHT
 import database_handling as db
@@ -36,37 +37,9 @@ while True:
 
     # list with values
     values = [outside_temp, inside_temp, humidity]
+
     # write data to database
-    try:
-        with connection.cursor() as cursor:
-            # write to outside_temperature table
-            sql = "INSERT INTO outside_temperature VALUES (NULL,%s,%s,%s)"
-            insert_tuple = (str(outside_temp), date, hour)
-            cursor.execute(sql, insert_tuple)
-            print(
-                f"Data saved: outside temperature:\
-                {outside_temp}; date: {date}; time: {hour}")
-
-            # write to inside_temperature table
-            sql = "INSERT INTO inside_temperature VALUES (NULL,%s,%s,%s)"
-            insert_tuple = (str(inside_temp), date, hour)
-            cursor.execute(sql, insert_tuple)
-            print(
-                f"Data saved: inside temperature:\
-                {inside_temp}; date: {date}; time: {hour}")
-
-            # write to inside_humidity table
-            sql = "INSERT INTO inside_humidity VALUES (NULL,%s,%s,%s)"
-            insert_tuple = (str(humidity), date, hour)
-            cursor.execute(sql, insert_tuple)
-            print(
-                f"Data saved: inside humidity:\
-                {humidity}; date: {date}; time: {hour}")
-
-            connection.commit()
-
-    except Exception:
-        pass
+    db.insert_data(connection, tables, values)
 
     # check temperature in interval
     time.sleep(300)

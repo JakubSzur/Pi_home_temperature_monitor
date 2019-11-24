@@ -91,7 +91,7 @@ def query_to_get_rows(connection, hours, timestamp, value, table):
     """Get data from database in specified range of time.
 
     Parameters:
-        connection (obj):Object returned from database_connection().              
+        connection (obj):Object returned from database_connection().
         hours(int):Period of time in hours to get data from database.
         timestamp(int):Interval of measuremnts.
         value(string):Value to get from database table.
