@@ -1,11 +1,8 @@
 from flask import Flask, render_template, url_for
 
-import datetime
-import pymysql.cursors
-import pymysql
 import OpenWeatherAPI
 import get_chart_path
-import database_handling as db
+from Pi_home_temperature_monitor import database_handling as db
 
 app = Flask(__name__, template_folder='templates')
 
@@ -13,39 +10,18 @@ app = Flask(__name__, template_folder='templates')
 @app.route("/")
 def main():
 
-    # get current time
-    now = datetime.datetime.now()
-    timeString = now.strftime("%Y-%m-%d %H:%M")
-
     # connect to database
     connection = db.database_connection()
 
-    # write querry to find last record from DB
-    with connection.cursor() as cursor:
-        # get outside temperature
-        sql = ('SELECT temperature FROM  outside_temperature ORDER BY\
-                ID DESC LIMIT 1')
-        cursor.execute(sql)
-        outside_temperature = cursor.fetchone()['temperature']
-
-        # get inside temperature
-        sql = ('SELECT temperature FROM  inside_temperature ORDER BY\
-                ID DESC LIMIT 1')
-        cursor.execute(sql)
-        inside_temperature = cursor.fetchone()['temperature']
-
-        # get inside humidity
-        sql = ('SELECT humidity FROM  inside_humidity ORDER BY\
-                ID DESC LIMIT 1')
-        cursor.execute(sql)
-        inside_humidity = cursor.fetchone()['humidity']
+    # get dictionary with last values from DB
+    last_values = db.get_current_values(connection)
 
     templateData = {
         'title': 'Pi Temperature Monitor',
-        'time': timeString,
-        'outside_temperature': outside_temperature,
-        'inside_temperature': inside_temperature,
-        'inside_humidity': inside_humidity
+        'time': last_values['time'],
+        'outside_temperature': last_values['outside_temperature'],
+        'inside_temperature': last_values['inside_temperature'],
+        'inside_humidity': last_values['inside_humidity']
         }
 
     # get JSON file with weather forecast
@@ -55,19 +31,19 @@ def main():
     # iterate througth list with weather values and add
     # them to the dictionary
     for i in range(len(parsed_JSON)):
-        templateData[f'time{i+1}']=parsed_JSON[i].time
-        templateData[f'temp{i+1}']=parsed_JSON[i].temperature
-        templateData[f'desc{i+1}']=parsed_JSON[i].description
-        templateData[f'pressure{i+1}']=parsed_JSON[i].pressure
-        templateData[f'humidity{i+1}']=parsed_JSON[i].humidity
+        templateData[f'time{i+1}'] = parsed_JSON[i].time
+        templateData[f'temp{i+1}'] = parsed_JSON[i].temperature
+        templateData[f'desc{i+1}'] = parsed_JSON[i].description
+        templateData[f'pressure{i+1}'] = parsed_JSON[i].pressure
+        templateData[f'humidity{i+1}'] = parsed_JSON[i].humidity
         try:
-            templateData[f'rain{i+1}']=parsed_JSON[i].rain
+            templateData[f'rain{i+1}'] = parsed_JSON[i].rain
         except:
             pass
-        templateData[f'snow{i+1}']=parsed_JSON[i].snow
+        templateData[f'snow{i+1}'] = parsed_JSON[i].snow
 
     # get list with paths
-    list_with_chart_paths = get_chart_path.find_charts('static/img',3)
+    list_with_chart_paths = get_chart_path.find_charts('static/img', 3)
     # begining of url_for formula to join with image path
     url_for_string = 'url_for(\'static\', filename=\''
 

@@ -150,6 +150,55 @@ def datatime_query(connection, hours, timestamp, value, table):
 
     return readable_time
 
+def get_current_values(connection):
+    """Get last measured values from database.
+
+    Parameters:
+        connection (obj):Object returned from database_connection().
+
+    Returns:
+        values(dict):Dictionary with values.
+    Dictionary values:
+        'time'
+        'outside_temperature'
+        'inside_temperature'
+        'inside_humidity'
+
+
+    """
+    # dictionary to store values
+    values = {}
+
+    # get current time
+    now = datetime.datetime.now()
+    timeString = now.strftime("%Y-%m-%d %H:%M")
+    values['time'] = timeString
+
+    # write querry to find last record from DB
+    with connection.cursor() as cursor:
+        # get outside temperature
+        sql = ('SELECT temperature FROM  outside_temperature ORDER BY\
+                ID DESC LIMIT 1')
+        cursor.execute(sql)
+        outside_temperature = cursor.fetchone()['temperature']
+        values['outside_temperature'] = outside_temperature
+
+        # get inside temperature
+        sql = ('SELECT temperature FROM  inside_temperature ORDER BY\
+                ID DESC LIMIT 1')
+        cursor.execute(sql)
+        inside_temperature = cursor.fetchone()['temperature']
+        values['inside_temperature'] = inside_temperature
+
+        # get inside humidity
+        sql = ('SELECT humidity FROM  inside_humidity ORDER BY\
+                ID DESC LIMIT 1')
+        cursor.execute(sql)
+        inside_humidity = cursor.fetchone()['humidity']
+        values['inside_humidity'] = inside_humidity
+
+    return values
+
 
 if __name__ == "__main__":
     pass
